@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ファンタジー・ボクセルワールド ― Fantasy Voxel World</title>
+<style>
+  html,body{margin:0;padding:0;overflow:hidden;background:#0b0e1a;height:100%;
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI",system-ui,sans-serif;color:#dfe8ff}
+  canvas.main{display:block;position:fixed;inset:0}
+  .panel{position:fixed;background:rgba(9,13,26,.74);border:1px solid rgba(120,150,220,.25);
+    border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.55;backdrop-filter:blur(4px);z-index:10}
+  #panel-left{top:12px;left:12px;width:186px}
+  #panel-left h1{font-size:14px;margin:0 0 2px;letter-spacing:.06em;color:#ffd97a}
+  #panel-left .sub{font-size:10.5px;opacity:.62;margin-bottom:8px}
+  .rbtn{display:block;width:100%;margin:4px 0;padding:6px 8px;text-align:left;cursor:pointer;
+    background:rgba(70,100,180,.18);border:1px solid rgba(130,160,230,.35);border-radius:8px;color:#dfe8ff;font-size:12.5px}
+  .rbtn:hover{background:rgba(110,150,240,.35)}
+  .rbtn.cur{background:rgba(255,200,90,.22);border-color:rgba(255,210,110,.6)}
+  .pop{float:right;font-size:11px;opacity:.85;font-family:monospace}
+  #panel-ctrl{bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:14px;align-items:center;white-space:nowrap}
+  #panel-ctrl label{font-size:11.5px;opacity:.9;display:flex;gap:5px;align-items:center}
+  #clockTxt{font-family:monospace;font-size:12px;color:#ffd97a;min-width:44px;text-align:center}
+  input[type=range]{width:130px;accent-color:#ffb84d}
+  .btn{cursor:pointer;background:rgba(70,100,180,.2);border:1px solid rgba(130,160,230,.4);
+    border-radius:7px;padding:4px 9px;font-size:12px;color:#dfe8ff}
+  .btn:hover{background:rgba(110,150,240,.35)}
+  #panel-help{bottom:12px;left:12px;font-size:10.6px;opacity:.9;max-width:270px;color:#aebcdf}
+  #panel-help b{color:#ffd97a;font-weight:600}
+  #mm-wrap{bottom:12px;right:12px;padding:8px}
+  #mm-stack{position:relative;width:204px;height:204px;border-radius:8px;overflow:hidden;cursor:crosshair}
+  #minimap,#mmOverlay{position:absolute;inset:0;width:204px;height:204px;image-rendering:pixelated}
+  #mm-title{font-size:11px;margin:0 0 6px 2px;color:#aebcdf;letter-spacing:.08em}
+  #fps{top:12px;right:12px;font-family:monospace;font-size:11px;padding:5px 9px;color:#9fd7a8}
+  #loading{position:fixed;inset:0;background:radial-gradient(ellipse at center,#16203c 0%,#090c18 75%);
+    display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center;z-index:99;transition:opacity .7s}
+  #loading .spin{width:44px;height:44px;border-radius:8px;border:4px solid rgba(255,217,122,.25);border-top-color:#ffd97a;animation:sp 1s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  #loading .cap{font-size:14px;letter-spacing:.12em;color:#cdd8f6}
+  #err{position:fixed;inset:auto 12px 12px 12px;background:#4a1020;color:#ffd7d7;font:12px/1.5 monospace;
+    padding:10px;border-radius:8px;display:none;z-index:120;max-height:36vh;overflow:auto}
+</style>
+</head>
+<body>
+<div id="loading"><div class="spin"></div><div class="cap">ワールドを生成中…</div></div>
+
+<div id="panel-left" class="panel">
+  <h1>⬛ ファンタジー・ボクセルワールド</h1>
+  <div class="sub">Mob Living Simulator — Foundation Map</div>
+  <div id="regionBtns"></div>
+</div>
+
+<div id="panel-ctrl" class="panel">
+  <button class="btn" id="btnMode" title="視点切替">🎥 展望</button>
+  <button class="btn" id="btnAuto">⟳ 自動巡回</button>
+  <button class="btn" id="btnMobs">👥 モブ: ON</button>
+  <span style="width:1px;height:18px;background:#3a4c78"></span>
+  <label>☀️ <input type="range" id="timeSlider" min="0" max="240" value="95"> 🌙</label>
+  <div id="clockTxt">--:--</div>
+  <button class="btn" id="btnCycle">⏸ サイクル</button>
+</div>
+
+<div id="panel-help" class="panel">
+  <b>ドラッグ</b>:見回す <b>ホイール</b>:ズーム <b>WASD</b>:移動<br>
+  <b>F</b>:視点切替(展望↔地上) <b>Shift</b>:加速 <b>1-5</b>:地域へジャンプ<br>
+  ミニマップをクリックしてワープ
+</div>
+
+<div id="mm-wrap" class="panel">
+  <div id="mm-title">WORLD MAP — 240×240</div>
+  <div id="mm-stack"><canvas id="minimap"></canvas><canvas id="mmOverlay"></canvas></div>
+</div>
+
+<div id="fps" class="panel">-- fps</div>
+<pre id="err"></pre>
+
+<script src="js/vendor/three.min.js"></script>
+<script src="js/core.js"></script>
+<script src="js/world.js"></script>
+<script src="js/structures.js"></script>
+<script src="js/mobs.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
