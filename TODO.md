@@ -6,4 +6,4 @@
 ## ToDoリスト
 - [x] Task 1: Gitリポジトリ初期化・除外設定（.gitignore作成）・TODOファイル初期配置と初回Push
 - [x] Task 2: プロジェクト本体コード・アセット（index.html, js/, shots/）の追加と除外設定の検証・Push
-- [ ] Task 3: プロジェクトドキュメント（README.md）の追加と完了記録Push
+- [x] Task 3: プロジェクトドキュメント（README.md）の追加と完了記録Push
